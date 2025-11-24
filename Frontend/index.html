@@ -28,8 +28,7 @@
       result.textContent = 'Đang gửi...';
       try {
         const data = new FormData(form);
-        // Gọi backend nằm ở thư mục ../Backend/backend.php
-        const resp = await fetch('../Backend/backend.php', { method: 'POST', body: data });
+        const resp = await fetch('backend.php', { method: 'POST', body: data });
         const json = await resp.json();
         if (json.success) {
           result.textContent = json.message;
