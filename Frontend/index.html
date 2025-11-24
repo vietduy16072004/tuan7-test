@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Form gửi tới PHP</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    label { display: block; margin: 8px 0; }
+    textarea { width: 100%; height: 100px; }
+    #result { margin-top: 12px; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>Gửi tin nhắn tới PHP (backend.php)</h1>
+  <form id="messageForm">
+    <label>Tên: <input name="name" required></label>
+    <label>Tin nhắn: <textarea name="message" required></textarea></label>
+    <button type="submit">Gửi</button>
+  </form>
+  <div id="result" aria-live="polite"></div>
+
+  <script>
+    const form = document.getElementById('messageForm');
+    const result = document.getElementById('result');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      result.textContent = 'Đang gửi...';
+      try {
+        const data = new FormData(form);
+        // Gọi backend nằm ở thư mục ../Backend/backend.php
+        const resp = await fetch('../Backend/backend.php', { method: 'POST', body: data });
+        const json = await resp.json();
+        if (json.success) {
+          result.textContent = json.message;
+        } else {
+          result.textContent = 'Lỗi: ' + (json.error || 'Không xác định');
+        }
+      } catch (err) {
+        result.textContent = 'Lỗi kết nối: ' + err.message;
+      }
+    });
+  </script>
+</body>
+</html>
